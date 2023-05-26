@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Room</title>
+  </head>
+  <body>
+    <ul id="messages"></ul>
+    <form id="message-form">
+      <input type="text" id="message-input" autocomplete="off">
+      <button>Enviar</button>
+    </form>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+
+      const messageList = document.getElementById('messages');
+      const messageForm = document.getElementById('message-form');
+      const messageInput = document.getElementById('message-input');
+
+      messageForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        if (messageInput.value) {
+          socket.emit('chat message', messageInput.value);
+          messageInput.value = '';
+        }
+      });
+
+      socket.on('chat message', (msg) => {
+        const listItem = document.createElement('li');
+        listItem.innerText = msg;
+        messageList.appendChild(listItem);
+      });
+    </script>
+  </body>
+</html>
